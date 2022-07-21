@@ -54,7 +54,7 @@ resource "azurerm_automation_account" "az-management-automation" {
 // make the automation account contributer on subscription level
 resource "azurerm_role_assignment" "automation-accont" {
   scope                = data.azurerm_subscription.primary.id
-  role_definition_name = "Contributer"
+  role_definition_name = "Contributor"
   principal_id         = azurerm_automation_account.az-management-automation.identity[0].principal_id
 }
 
@@ -81,7 +81,7 @@ resource "azurerm_automation_schedule" "daily-midnight" {
   automation_account_name = azurerm_automation_account.az-management-automation.name
   frequency               = "Day"
   interval                = 1
-  start_time              = timestamp()
+  start_time              = timeadd(timestamp(), "10m")
   description             = "Run daily"
 
   lifecycle {
@@ -93,7 +93,7 @@ resource "azurerm_automation_schedule" "daily-midnight" {
 }
 
 // link runbook and schedule
-resource "azurerm_automation_module" "daily-firewall-cleanup" {
+resource "azurerm_automation_job_schedule" "daily-firewall-cleanup" {
   resource_group_name     = azurerm_resource_group.rg-management.name
   automation_account_name = azurerm_automation_account.az-management-automation.name
   runbook_name            = azurerm_automation_runbook.SQL_server_firewall_management.name

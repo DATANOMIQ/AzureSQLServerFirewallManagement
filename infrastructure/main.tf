@@ -36,6 +36,17 @@ variable "az_subscription_id" {
 data "azurerm_subscription" "primary" {
 }
 
+/*
+ * The terraform code below asumes that there is a resource group rg-management. If not available, uncomment the next block.
+ */
+
+ /*
+ resource "azurerm_resource_group" "rg-management" {
+  name = "rg-management"
+  location = var.az_location
+ }
+ */
+
 // create azure automation account
 resource "azurerm_automation_account" "az-management-automation" {
   name                = "az-management-account"
